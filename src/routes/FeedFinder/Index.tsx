@@ -52,7 +52,12 @@ function FeedFinder() {
       <div className="bg-ctp-base min-h-screen flex items-center justify-center  p-4">
         <div className="w-full max-w-2xl mx-auto">
           <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl font-bold text-ctp-mauve mb-2">
+            <h1 className="text-4xl md:text-5xl font-bold text-ctp-green mb-2">
+              <img
+                className="inline-block w-12 h-12 mr-2"
+                src="https://raw.githubusercontent.com/joejo-joestar/joestar-tools/refs/heads/main/src/assets/pixnewscar.png"
+                alt="o7"
+              />
               Feed Finder
             </h1>
             <p className="text-ctp-blue-950 text-lg">

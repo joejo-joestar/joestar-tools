@@ -242,8 +242,13 @@ const SchemaMaker: React.FC = () => {
     <section className="flex flex-col w-10/12 min-h-screen bg-ctp-base text-ctp-rosewater my-64">
       {/* MARK: Header */}
       <header className="text-center mb-10">
-        <h1 className="text-4xl md:text-5xl font-bold text-ctp-mauve mb-2">
-          JSON Schema Generator
+        <h1 className="text-4xl md:text-5xl font-bold text-ctp-green mb-2">
+          <img
+            className="inline-block w-12 h-12 mr-2"
+            src="https://raw.githubusercontent.com/joejo-joestar/joestar-tools/refs/heads/main/src/assets/pixcodingcar.png"
+            alt="o7"
+          />
+          Schema Maker
         </h1>
         <p className="text-ctp-blue-950 text-lg">
           Start Creating a{" "}
