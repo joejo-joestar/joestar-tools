@@ -248,17 +248,17 @@ const SchemaMaker: React.FC = () => {
             src="https://raw.githubusercontent.com/joejo-joestar/joestar-tools/refs/heads/main/src/assets/pixcodingcar.png"
             alt="o7"
           />
-          Schema Maker
+          schema maker
         </h1>
         <p className="text-ctp-blue-950 text-lg">
-          Start Creating a{" "}
+          start creating a{" "}
           <a
             className="text-ctp-blue-300 hover:underline"
             href="https://json-schema.org/overview/what-is-jsonschema"
             target="_blank"
             rel="noopener noreferrer"
           >
-            JSON Schema
+            json schema
           </a>
         </p>
       </header>

@@ -9,6 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import Footer from "@components/Footer";
 import SchemaMaker from "./routes/SchemaMaker/Index";
 import FeedFinder from "./routes/FeedFinder/Index";
+import Home from "./routes/Home/Index";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -24,15 +25,7 @@ createRoot(document.getElementById("root")!).render(
             </>
           }
         >
-          <Route
-            path="/"
-            element={
-              <section className=" min-h-screen justify-center align-middle  flex flex-col w-10/12 text-ctp-rosewater">
-                <Link to="/feed-finder">Go to Feed Finder</Link>
-                <Link to="/schema-maker">Go to Schema Maker</Link>
-              </section>
-            }
-          />
+          <Route path="/" element={<Home />} />
           <Route path="feed-finder" element={<FeedFinder />} />
           <Route path="schema-maker" element={<SchemaMaker />} />
         </Route>
