@@ -17,6 +17,7 @@ function Home() {
             <a href="https://joestar.vercel.app" target="_blank">
               joestar
             </a>
+            .
           </span>
         </h1>
         <div className="flex flex-col gap-4 text-2xl text-ctp-rosewater">
