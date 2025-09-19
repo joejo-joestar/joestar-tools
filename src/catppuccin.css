@@ -1,0 +1,20 @@
+/* https://catppuccin.com/ */
+:root {
+  --main-bg-color: #181825;
+  --main-bg-color-secondary: #11111b;
+  --main-overlay-color: #6c7086;
+  --main-surface-color: #313244;
+  --main-text-color: #cdd6f4;
+  --main-text-color-secondary: #bac2de;
+  --main-text-color-tertiary: #a6adc8;
+  --main-text-color-quaternary: #9399b2;
+  --main-accent-color-rosewater: #f5e0dc;
+  --main-accent-color-mauve: #cba6f7;
+  --main-accent-color-red: #f38ba8;
+  --main-accent-color-peach: #fab387;
+  --main-accent-color-yellow: #f9e2af;
+  --main-accent-color-green: #a6e3a1;
+  --main-accent-color-teal: #94e2d5;
+  --main-accent-color-sapphire: #74c7ec;
+  --main-accent-color-blue: #89b4fa;
+}

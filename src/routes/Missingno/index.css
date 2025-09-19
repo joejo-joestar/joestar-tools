@@ -1,0 +1,37 @@
+.missing-page {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: 500;
+    gap: 2rem;
+    color: var(--main-accent-color-mauve);
+}
+
+.missing-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.missing-text {
+    text-align: center;
+    width: 100%;
+}
+
+.missingno {
+    width: 10rem;
+}
+
+.four-oh-four {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    font-weight: 900;
+    color: var(--main-accent-color-green);
+}
