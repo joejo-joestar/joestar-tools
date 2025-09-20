@@ -21,13 +21,13 @@ function Home() {
           </span>
         </h1>
         <div className="flex flex-col gap-4 text-2xl text-ctp-rosewater">
-          <Link to={"/feed-finder"}>
+          <Link to={"/feed-finder"} className="">
             <img
               className="inline-block w-12 h-12 mr-2"
               src="https://raw.githubusercontent.com/joejo-joestar/joestar-tools/refs/heads/main/src/assets/pixnewscar.png"
               alt="o7"
             />
-            feed finder
+            feed finder.
           </Link>
           <Link to={"/schema-maker"}>
             <img
@@ -35,7 +35,7 @@ function Home() {
               src="https://raw.githubusercontent.com/joejo-joestar/joestar-tools/refs/heads/main/src/assets/pixcodingcar.png"
               alt="o7"
             />
-            schema maker
+            schema maker.
           </Link>
         </div>
       </section>

@@ -12,7 +12,7 @@ function activeStyle({ isActive }: { isActive: boolean }) {
 }
 
 const Navbar = () => {
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery("(max-width: 950px)");
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -22,7 +22,7 @@ const Navbar = () => {
         {!isMobile && (
           <>
             <div className="nav-home">
-              <NavLink to="/" end>
+              <NavLink to="https://joestar.vercel.app/" end>
                 <img
                   src="https://raw.githubusercontent.com/joejo-joestar/joestar/fc38de228fac77efad2318e634293e7f36ceebce/public/pixlogo.png"
                   alt="Joe :3"
@@ -30,16 +30,28 @@ const Navbar = () => {
               </NavLink>
             </div>
             <div className="nav-links">
-              <NavLink to="/projects" style={activeStyle}>
+              <NavLink
+                to="https://joestar.vercel.app/projects"
+                style={activeStyle}
+              >
                 projects.
               </NavLink>
-              <NavLink to="/pics" style={activeStyle}>
+              <NavLink to="/" style={activeStyle}>
+                tools.
+              </NavLink>
+              <NavLink to="https://joestar.vercel.app/pics" style={activeStyle}>
                 photos.
               </NavLink>
-              <NavLink to="/nownownow" style={activeStyle}>
+              <NavLink
+                to="https://joestar.vercel.app/nownownow"
+                style={activeStyle}
+              >
                 now.
               </NavLink>
-              <NavLink to="/contact" style={activeStyle}>
+              <NavLink
+                to="https://joestar.vercel.app/contact"
+                style={activeStyle}
+              >
                 contact.
               </NavLink>
             </div>
@@ -50,7 +62,11 @@ const Navbar = () => {
         {isMobile && (
           <>
             <div className="nav-home">
-              <NavLink to="/" onClick={() => setIsOpen(false)} end>
+              <NavLink
+                to="https://joestar.vercel.app/"
+                onClick={() => setIsOpen(false)}
+                end
+              >
                 <img
                   src="https://raw.githubusercontent.com/joejo-joestar/joestar/fc38de228fac77efad2318e634293e7f36ceebce/public/pixlogo.png"
                   alt="Joe :3"
@@ -107,28 +123,31 @@ const Navbar = () => {
               <div className="sidebar-content">
                 <div className="nav-links-mobile">
                   <NavLink
-                    to="/projects"
+                    to="https://joestar.vercel.app/projects"
                     style={activeStyle}
                     onClick={() => setIsOpen(false)}
                   >
                     projects.
                   </NavLink>
+                  <NavLink to="/" style={activeStyle}>
+                    tools.
+                  </NavLink>
                   <NavLink
-                    to="/pics"
+                    to="https://joestar.vercel.app/pics"
                     style={activeStyle}
                     onClick={() => setIsOpen(false)}
                   >
                     photos.
                   </NavLink>
                   <NavLink
-                    to="/nownownow"
+                    to="https://joestar.vercel.app/nownownow"
                     style={activeStyle}
                     onClick={() => setIsOpen(false)}
                   >
                     now.
                   </NavLink>
                   <NavLink
-                    to="/contact"
+                    to="https://joestar.vercel.app/contact"
                     style={activeStyle}
                     onClick={() => setIsOpen(false)}
                   >

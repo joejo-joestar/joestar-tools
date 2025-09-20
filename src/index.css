@@ -72,21 +72,12 @@ html {
 }
 
 a {
-  font-weight: 500;
   color: var(--main-accent-color-red);
-  text-decoration: inherit;
   transition: all 250ms ease-in-out;
 }
 a:hover {
-  background-color: var(--main-accent-color-red);
-  color: var(--main-overlay-color);
-  text-shadow:
-    3px 0 1px rgba(0, 0, 0, 0.1),
-    -3px 0 1px rgba(0, 0, 0, 0.1),
-    0 0 3px;
-  box-shadow:
-    2px 0 1px rgba(255, 255, 255, 0.1),
-    -2px 0 1px rgba(255, 255, 255, 0.1);
+  text-decoration: underline;
+  color: var(--main-accent-color-mauve);
   transition: all 250ms ease-in-out;
 }
 

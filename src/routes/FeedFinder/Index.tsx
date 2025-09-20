@@ -58,7 +58,7 @@ function FeedFinder() {
                 src="https://raw.githubusercontent.com/joejo-joestar/joestar-tools/refs/heads/main/src/assets/pixnewscar.png"
                 alt="o7"
               />
-              feed finder
+              feed finder.
             </h1>
             <p className="text-ctp-blue-950 text-lg">
               enter a url to discover its rss or atom feed.

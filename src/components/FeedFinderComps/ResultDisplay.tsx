@@ -90,7 +90,7 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
           {copied ? (
             <>
               <svg
-                className="text-ctp-green-50"
+                className="fill-ctp-green-50 w-6 h-6"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 640 640"
               >
@@ -101,7 +101,7 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
           ) : (
             <>
               <svg
-                className="text-ctp-mauve-50"
+                className="fill-ctp-mauve-50 w-6 h-6"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 640 640"
               >

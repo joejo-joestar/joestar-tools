@@ -248,7 +248,7 @@ const SchemaMaker: React.FC = () => {
             src="https://raw.githubusercontent.com/joejo-joestar/joestar-tools/refs/heads/main/src/assets/pixcodingcar.png"
             alt="o7"
           />
-          schema maker
+          schema maker.
         </h1>
         <p className="text-ctp-blue-950 text-lg">
           start creating a{" "}
@@ -260,6 +260,7 @@ const SchemaMaker: React.FC = () => {
           >
             json schema
           </a>
+          .
         </p>
       </header>
 
