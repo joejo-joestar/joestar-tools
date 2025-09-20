@@ -2,6 +2,7 @@ import "./index.css";
 import { NavLink, Outlet } from "react-router";
 import useMediaQuery from "@hooks/useMediaQuery";
 import { useState } from "react";
+import { NavItems } from "./NavItems";
 
 function activeStyle({ isActive }: { isActive: boolean }) {
   return {
@@ -30,30 +31,11 @@ const Navbar = () => {
               </NavLink>
             </div>
             <div className="nav-links">
-              <NavLink
-                to="https://joestar.vercel.app/projects"
-                style={activeStyle}
-              >
-                projects.
-              </NavLink>
-              <NavLink to="/" style={activeStyle}>
-                tools.
-              </NavLink>
-              <NavLink to="https://joestar.vercel.app/pics" style={activeStyle}>
-                photos.
-              </NavLink>
-              <NavLink
-                to="https://joestar.vercel.app/nownownow"
-                style={activeStyle}
-              >
-                now.
-              </NavLink>
-              <NavLink
-                to="https://joestar.vercel.app/contact"
-                style={activeStyle}
-              >
-                contact.
-              </NavLink>
+              {Object.values(NavItems).map((item: any) => (
+                <NavLink key={item.label} to={item.to} style={activeStyle}>
+                  {item.label}
+                </NavLink>
+              ))}
             </div>
           </>
         )}
@@ -62,11 +44,7 @@ const Navbar = () => {
         {isMobile && (
           <>
             <div className="nav-home">
-              <NavLink
-                to="https://joestar.vercel.app/"
-                onClick={() => setIsOpen(false)}
-                end
-              >
+              <NavLink to="/" onClick={() => setIsOpen(false)} end>
                 <img
                   src="https://raw.githubusercontent.com/joejo-joestar/joestar/fc38de228fac77efad2318e634293e7f36ceebce/public/pixlogo.png"
                   alt="Joe :3"
@@ -122,37 +100,16 @@ const Navbar = () => {
             >
               <div className="sidebar-content">
                 <div className="nav-links-mobile">
-                  <NavLink
-                    to="https://joestar.vercel.app/projects"
-                    style={activeStyle}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    projects.
-                  </NavLink>
-                  <NavLink to="/" style={activeStyle}>
-                    tools.
-                  </NavLink>
-                  <NavLink
-                    to="https://joestar.vercel.app/pics"
-                    style={activeStyle}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    photos.
-                  </NavLink>
-                  <NavLink
-                    to="https://joestar.vercel.app/nownownow"
-                    style={activeStyle}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    now.
-                  </NavLink>
-                  <NavLink
-                    to="https://joestar.vercel.app/contact"
-                    style={activeStyle}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    contact.
-                  </NavLink>
+                  {Object.values(NavItems).map((item: any) => (
+                    <NavLink
+                      key={item.label}
+                      to={item.to}
+                      style={activeStyle}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </NavLink>
+                  ))}
                 </div>
               </div>
             </aside>
