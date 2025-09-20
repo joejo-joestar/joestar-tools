@@ -21,6 +21,34 @@ npm run dev
 
 ---
 
+## 👷‍♂️ Tools
+
+a list of available tools
+
+### Feed Finder
+
+a simple clientside rss / atom news feed detector
+
+<details>
+    <summary>Preview</summary>
+    <p align="center">
+        <img src="src/assets/readme/feedfinder.png" alt="Feed Finder" title="Feed Finder" >
+    </p>
+</details>
+
+### Schema Maker
+
+a simple clientside visual [json schema](https://json-schema.org/understanding-json-schema/about) generator
+
+<details>
+    <summary>Preview</summary>
+    <p align="center">
+        <img src="src/assets/readme/schemamaker.png" alt="Schema Maker" title="Schema Maker" >
+    </p>
+</details>
+
+---
+
 ## 🗂️ Project Structure
 
 Below is a compact tree of the most important files and folders with a short note about their purpose.
