@@ -50,7 +50,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema }) => {
 
   return (
     <div className="h-full flex flex-col relative p-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-col sm:flex-row">
         <h3 className="text-lg font-semibold text-ctp-green-50">
           Generated Schema
         </h3>
