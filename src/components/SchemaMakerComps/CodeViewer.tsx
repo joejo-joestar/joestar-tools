@@ -1,19 +1,94 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ClipboardIcon, CheckIcon } from "@/assets/Icons";
-import hljs from "highlight.js/lib/core";
-import json from "highlight.js/lib/languages/json";
+import * as monaco from "monaco-editor";
+import { createHighlighter } from "shiki";
+import { shikiToMonaco } from "@shikijs/monaco";
 import "@catppuccin/highlightjs/css/catppuccin-mocha.css";
-
-// Register JSON language once
-hljs.registerLanguage("json", json);
 
 interface CodeViewerProps {
   schema: object;
 }
 
+// Ensure Monaco can load its web workers in the Vite environment
+(self as unknown as { MonacoEnvironment?: unknown }).MonacoEnvironment = {
+  getWorker(_: unknown, label: string) {
+    if (label === "json") {
+      return new Worker(
+        new URL(
+          "monaco-editor/esm/vs/language/json/json.worker",
+          import.meta.url
+        ),
+        { type: "module" }
+      );
+    }
+    return new Worker(
+      new URL("monaco-editor/esm/vs/editor/editor.worker", import.meta.url),
+      { type: "module" }
+    );
+  },
+};
+
 const CodeViewer: React.FC<CodeViewerProps> = ({ schema }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+  const modelRef = useRef<monaco.editor.ITextModel | null>(null);
   const [copied, setCopied] = useState(false);
-  const schemaString = JSON.stringify(schema, null, 2);
+
+  // Initialize the editor once
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const initial = JSON.stringify(schema ?? {}, null, 2);
+    modelRef.current = monaco.editor.createModel(initial, "json");
+
+    editorRef.current = monaco.editor.create(containerRef.current, {
+      model: modelRef.current,
+      language: "json",
+      automaticLayout: true,
+      minimap: { enabled: true },
+      folding: true,
+      glyphMargin: false,
+      wordWrap: "off",
+      theme: "vs-dark",
+      readOnly: true,
+      lineNumbers: "on",
+    });
+
+    // Apply shiki theme to monaco (best-effort)
+    (async () => {
+      try {
+        const name = "catppuccin-mocha";
+        const highlighter = await createHighlighter({
+          themes: [name],
+          langs: ["json"],
+        });
+        shikiToMonaco(highlighter, monaco);
+        monaco.editor.setTheme(name as any);
+      } catch {
+        // ignore theme errors and keep the default
+      }
+    })();
+
+    return () => {
+      editorRef.current?.dispose();
+      modelRef.current?.dispose();
+      editorRef.current = null;
+      modelRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Update model when schema changes
+  useEffect(() => {
+    const txt = JSON.stringify(schema ?? {}, null, 2);
+    if (modelRef.current) {
+      // Use setValue so the editor doesn't recreate the model
+      modelRef.current.setValue(txt);
+    } else if (editorRef.current && containerRef.current) {
+      modelRef.current = monaco.editor.createModel(txt, "json");
+      editorRef.current.setModel(modelRef.current);
+    }
+  }, [schema]);
 
   useEffect(() => {
     if (copied) {
@@ -22,29 +97,14 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema }) => {
     }
   }, [copied]);
 
-  // Compute highlighted HTML for the schema string so we can render it directly.
-  const highlightedHtml = useMemo(() => {
-    try {
-      // hljs.highlight returns an object with a `value` property that contains HTML
-      return hljs.highlight(schemaString, {
-        language: "json",
-        ignoreIllegals: true,
-      }).value;
-    } catch (_err) {
-      // Fallback: escape the raw string so it renders as plain text
-      return schemaString
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-    }
-  }, [schemaString]);
-
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(schemaString);
+      const text =
+        modelRef.current?.getValue() ?? JSON.stringify(schema ?? {}, null, 2);
+      await navigator.clipboard.writeText(text);
       setCopied(true);
     } catch (_err) {
-      // ignore copy errors in the UI
+      // ignore
     }
   };
 
@@ -72,13 +132,11 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema }) => {
 
       <div className="h-[2px] bg-ctp-green/50 my-2" />
 
-      <div className="p-4 overflow-auto border-ctp-base bg-ctp-base">
-        <pre className="text-sm whitespace-pre-wrap">
-          <code
-            className="language-json text-sm whitespace-pre-wrap"
-            dangerouslySetInnerHTML={{ __html: highlightedHtml }}
-          />
-        </pre>
+      <div className="p-4 overflow-auto border-ctp-base bg-ctp-base h-full">
+        <div
+          ref={containerRef}
+          className="w-full h-[420px] rounded-sm overflow-hidden"
+        />
       </div>
     </div>
   );

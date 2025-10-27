@@ -15,6 +15,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@shikijs/monaco": "^3.14.0",
     "@tailwindcss/vite": "^4.1.13",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
@@ -22,12 +23,14 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-react": "^7.37.5",
+    "highlight.js": "^11.11.1",
+    "monaco-editor": "^0.54.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.6.3",
-    "highlight.js": "^11.11.1",
+    "shiki": "^3.14.0",
     "tailwindcss": "^4.1.13"
   },
   "devDependencies": {
@@ -44,6 +47,7 @@
     "globals": "^16.3.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
-    "vite": "^7.0.2"
+    "vite": "^7.0.2",
+    "vite-plugin-monaco-editor": "^1.1.0"
   }
 }
