@@ -20,9 +20,10 @@ const SNIPPETS: SnippetDef[] = [
     description: "Insert an object with properties",
     body: `"\${1:obj}": {
   "type": "object",
+  "description": "\${2:An object property}",
   "properties": {
-    "\${2:prop}": {
-      "type": "string"
+    "\${3:prop}": {
+      "type": "\${4|string,object,array,number,boolean|}"
     }
   }
 },`,
@@ -33,8 +34,9 @@ const SNIPPETS: SnippetDef[] = [
     description: "Insert an array with items",
     body: `"\${1:arr}": {
   "type": "array",
+  "description": "\${2:An array property}",
   "items": {
-    "type": "\${2|string,object,array,number,boolean|}"
+    "type": "\${3|string,object,array,number,boolean|}"
   }
 },`,
   },
