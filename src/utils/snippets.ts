@@ -5,15 +5,6 @@ export interface SnippetDef {
 }
 
 const SNIPPETS: SnippetDef[] = [
-  // MARK: Property
-  {
-    label: "property",
-    description: "Insert a property definition",
-    body: `"\${1:prop}": {
-  "type": "\${2|string,object,array,number,boolean|}",
-  "description": "\${3:description}"
-},`,
-  },
   // MARK: Object
   {
     label: "object",
@@ -83,10 +74,11 @@ const SNIPPETS: SnippetDef[] = [
   "description": "\${2:A null property}"
 },`,
   },
+  // MARK: Pattern
   {
     label: "pattern",
     description: "Insert a string property with pattern",
-    body: `"\${1:str}": {
+    body: `"\${1:patt}": {
   "type": "string",
   "pattern": "\${2:^[a-zA-Z]+$}",
   "description": "\${3:A string property with pattern}"
