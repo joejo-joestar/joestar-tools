@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useMemo } from "react";
+import * as monaco from "monaco-editor";
 import { type SchemaField, SchemaType } from "@shared/types";
 import SplitView from "@components/SchemaMakerComps/SplitView";
 import { schemaToFields } from "@utils/schemaConverter";
 import useMediaQuery from "@hooks/useMediaQuery";
 import SchemaBuilder from "@components/SchemaMakerComps/SchemaBuilder";
 import CodeViewer from "@components/SchemaMakerComps/CodeViewer";
+import Toast from "@components/Toast";
+import type { ToastVariant } from "@components/Toast";
 
 const SchemaMaker: React.FC = () => {
   const [mobileShowSchema, setMobileShowSchema] = useState(false);
@@ -54,6 +57,11 @@ const SchemaMaker: React.FC = () => {
     },
   ]);
 
+  const [validationToast, setValidationToast] = useState<{
+    message: string;
+    variant?: ToastVariant;
+  } | null>(null);
+
   const recursivelyUpdate = useCallback(
     <T extends keyof SchemaField>(
       currentFields: SchemaField[],
@@ -92,15 +100,54 @@ const SchemaMaker: React.FC = () => {
     []
   );
 
+  // Helper: find the properties array that contains the field with `id`.
+  // Returns the array reference (so callers can check siblings) or null.
+  const findParentPropertiesList = (
+    currentFields: SchemaField[],
+    id: string
+  ): SchemaField[] | null => {
+    for (const field of currentFields) {
+      if (field.id === id) return currentFields;
+      if (field.properties) {
+        const found = findParentPropertiesList(field.properties, id);
+        if (found) return found;
+      }
+      if (field.items) {
+        // items are represented as a single field; treat them as their own list
+        if (field.items.id === id) return [field.items];
+        const found = findParentPropertiesList([field.items], id);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   const handleFieldUpdate = useCallback(
     <T extends keyof SchemaField>(
       id: string,
       property: T,
       value: SchemaField[T]
     ) => {
-      setFields((currentFields) =>
-        recursivelyUpdate(currentFields, id, property, value)
-      );
+      setFields((currentFields) => {
+        // If updating the 'key' property, ensure there is no sibling with the same key
+        if (property === "key") {
+          const parentList =
+            findParentPropertiesList(currentFields, id) || currentFields;
+          const candidate = value as unknown as string;
+          if (
+            candidate &&
+            parentList.some((f) => f.key === candidate && f.id !== id)
+          ) {
+            setValidationToast({
+              message: `Duplicate key "${candidate}" detected in the same object scope`,
+              variant: "error",
+            });
+            return currentFields;
+          }
+        }
+
+        return recursivelyUpdate(currentFields, id, property, value);
+      });
     },
     [recursivelyUpdate]
   );
@@ -245,15 +292,67 @@ const SchemaMaker: React.FC = () => {
   }, [fields, schemaTitle]);
 
   // Import handler: replace left-side fields from a JSON Schema object
-  const handleImportSchema = (schemaObj: object) => {
-    try {
-      const converted = schemaToFields(schemaObj);
-      if (converted && converted.length > 0) {
-        setFields(converted as SchemaField[]);
+  // Accept optional Monaco markers from the editor and reject imports if
+  // there are any markers with severity >= Warning.
+  const handleImportSchema = (
+    schemaObj: object,
+    markers?: { message: string; severity: number }[]
+  ) => {
+    // If the editor reported markers, refuse import when any are warnings/errors.
+    if (markers && markers.length > 0) {
+      const hasWarningOrError = markers.some(
+        (m) => m.severity >= (monaco as any).MarkerSeverity.Warning
+      );
+      if (hasWarningOrError) {
+        // Throw an error so the caller (CodeViewer) can show a toast.
+        throw new Error(
+          "Import blocked: editor contains warnings or errors. Fix them before importing."
+        );
       }
-    } catch (_err) {
-      // ignore invalid schema
     }
+
+    // Convert and validate the incoming schema (duplicate-key validation).
+    const converted = schemaToFields(schemaObj);
+    if (!converted || converted.length === 0) return;
+
+    const findDuplicates = (list: SchemaField[], path = "root"): string[] => {
+      const errors: string[] = [];
+      const seen = new Map<string, number>();
+      for (const field of list) {
+        const k = field.key || "";
+        if (!k) continue; // skip empty keys
+        seen.set(k, (seen.get(k) || 0) + 1);
+      }
+      for (const [k, count] of seen.entries()) {
+        if (count > 1) errors.push(`Duplicate key \"${k}\" at ${path}`);
+      }
+
+      // Recurse into nested properties and items
+      for (const field of list) {
+        if (field.properties && field.properties.length > 0) {
+          errors.push(
+            ...findDuplicates(
+              field.properties,
+              `${path}/${field.key || "object"}`
+            )
+          );
+        }
+        if (field.items) {
+          errors.push(
+            ...findDuplicates([field.items], `${path}/${field.key || "items"}`)
+          );
+        }
+      }
+      return errors;
+    };
+
+    const dupErrors = findDuplicates(converted, "root");
+    if (dupErrors.length > 0) {
+      // Combine into one message and throw so the caller's try/catch shows a toast.
+      throw new Error(dupErrors.join("; "));
+    }
+
+    setFields(converted as SchemaField[]);
   };
 
   return (
@@ -309,6 +408,13 @@ const SchemaMaker: React.FC = () => {
           </div>
           <MobileSchemaToggle generatedSchema={generatedSchema} />
         </div>
+      )}
+      {validationToast && (
+        <Toast
+          message={validationToast.message}
+          variant={validationToast.variant}
+          onClose={() => setValidationToast(null)}
+        />
       )}
     </section>
   );

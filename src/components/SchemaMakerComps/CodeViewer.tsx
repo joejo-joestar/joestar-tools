@@ -11,10 +11,20 @@ import { createHighlighter } from "shiki";
 import { shikiToMonaco } from "@shikijs/monaco";
 import "@catppuccin/highlightjs/css/catppuccin-mocha.css";
 import SNIPPETS from "../../utils/snippets";
+import Toast from "../Toast";
+import type { ToastVariant } from "../Toast";
 
 interface CodeViewerProps {
   schema: object;
-  onImportSchema?: (schemaObj: object) => void;
+  onImportSchema?: (
+    schemaObj: object,
+    markers?: {
+      message: string;
+      severity: number;
+      startLineNumber: number;
+      startColumn: number;
+    }[]
+  ) => void;
 }
 
 // Ensure Monaco can load its web workers in the Vite environment
@@ -32,6 +42,10 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const modelRef = useRef<monaco.editor.ITextModel | null>(null);
   const [copied, setCopied] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    variant?: ToastVariant;
+  } | null>(null);
   // Suppress change events that originate from programmatic model updates
   const suppressChangeRef = useRef(false);
   // Debounce timer for parsing editor content
@@ -128,11 +142,32 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
           const text = modelRef.current?.getValue() ?? "";
           const parsed = JSON.parse(text);
           if (parsed && typeof parsed === "object" && onImportSchema) {
-            onImportSchema(parsed);
+            // gather markers from Monaco (if any) and pass them to the importer
+            const model = modelRef.current;
+            const markers = model
+              ? monaco.editor
+                  .getModelMarkers({ resource: model.uri })
+                  .map((m) => ({
+                    message: m.message,
+                    severity: m.severity,
+                    startLineNumber: m.startLineNumber,
+                    startColumn: m.startColumn,
+                  }))
+              : [];
+
+            onImportSchema(parsed, markers);
             contentDirtyRef.current = false;
+            setToast({ message: "Schema imported", variant: "success" });
           }
-        } catch {
-          // ignore parse errors
+        } catch (err: any) {
+          // Try to include the JSON.parse error message if present, and prefer
+          // Monaco markers if they exist.
+          const marker = getMarkerSummary();
+          const errMsg = err?.message ? `: ${err.message}` : "";
+          setToast({
+            message: marker ?? `Failed to import — invalid JSON${errMsg}`,
+            variant: "error",
+          });
         }
       });
     }
@@ -171,6 +206,33 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
     }
   }, [schema]);
 
+  // Helper: collect markers (errors/warnings) for the current model and
+  // return a short human-readable summary suitable for a toast message.
+  const getMarkerSummary = (): string | null => {
+    const model = modelRef.current;
+    if (!model) return null;
+    try {
+      const markers = monaco.editor.getModelMarkers({ resource: model.uri });
+      if (!markers || markers.length === 0) return null;
+      // Prefer an Error marker, then Warning, then the first available.
+      const chosen =
+        markers.find((m) => m.severity === monaco.MarkerSeverity.Error) ||
+        markers.find((m) => m.severity === monaco.MarkerSeverity.Warning) ||
+        markers[0];
+      const severityLabel =
+        chosen.severity === monaco.MarkerSeverity.Error
+          ? "Error"
+          : chosen.severity === monaco.MarkerSeverity.Warning
+            ? "Warning"
+            : "Notice";
+      const loc = `line ${chosen.startLineNumber}, col ${chosen.startColumn}`;
+      const extra = markers.length > 1 ? ` (+${markers.length - 1} more)` : "";
+      return `${severityLabel} at ${loc}: ${chosen.message}${extra}`;
+    } catch {
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (copied) {
       const timer = setTimeout(() => setCopied(false), 2000);
@@ -184,11 +246,47 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
         modelRef.current?.getValue() ?? JSON.stringify(schema ?? {}, null, 2);
       await navigator.clipboard.writeText(text);
       setCopied(true);
+      setToast({ message: "Copied to clipboard", variant: "success" });
     } catch (_err) {
-      // ignore
+      setToast({ message: "Copy failed", variant: "error" });
     }
   };
 
+  const handleImport = async () => {
+    if (onImportSchema && modelRef.current) {
+      try {
+        const text = modelRef.current.getValue();
+        const parsed = JSON.parse(text);
+        if (parsed && typeof parsed === "object") {
+          const model = modelRef.current;
+          const markers = model
+            ? monaco.editor
+                .getModelMarkers({ resource: model.uri })
+                .map((m) => ({
+                  message: m.message,
+                  severity: m.severity,
+                  startLineNumber: m.startLineNumber,
+                  startColumn: m.startColumn,
+                }))
+            : [];
+
+          onImportSchema(parsed, markers);
+          contentDirtyRef.current = false;
+          setToast({
+            message: "Schema imported",
+            variant: "success",
+          });
+        }
+      } catch (err: any) {
+        const marker = getMarkerSummary();
+        const errMsg = err?.message ? `: ${err.message}` : "";
+        setToast({
+          message: marker ?? `Failed to import — invalid JSON${errMsg}`,
+          variant: "error",
+        });
+      }
+    }
+  };
   return (
     <div className="h-full flex flex-col relative p-6">
       <div className="flex justify-between items-center flex-col sm:flex-row">
@@ -210,18 +308,31 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
               </>
             )}
           </button>
-          {/* Import button removed — Ctrl/Cmd+S now triggers import when editor content is dirty */}
+          <button
+            onClick={handleImport}
+            className="bg-ctp-blue-700 hover:bg-ctp-blue-600 text-ctp-blue-50 flex-shrink-0 cursor-pointer w-full sm:w-auto font-medium py-2 px-4 transition duration-200 flex items-center justify-center gap-2"
+          >
+            {onImportSchema && (
+              <>
+                <span>Import Schema</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
       <div className="h-[2px] bg-ctp-green/50 my-2" />
 
       <div className="p-4 overflow-auto border-ctp-base bg-ctp-base h-full">
-        <div
-          ref={containerRef}
-          className="w-full h-[420px] rounded-sm overflow-hidden"
-        />
+        <div ref={containerRef} className="w-full h-full overflow-hidden" />
       </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          variant={toast.variant as ToastVariant}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };

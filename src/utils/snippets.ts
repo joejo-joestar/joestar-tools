@@ -17,7 +17,7 @@ const SNIPPETS: SnippetDef[] = [
       "type": "\${4|string,object,array,number,boolean|}"
     }
   }
-},`,
+}`,
   },
   // MARK: Array
   {
@@ -29,7 +29,7 @@ const SNIPPETS: SnippetDef[] = [
   "items": {
     "type": "\${3|string,object,array,number,boolean|}"
   }
-},`,
+}`,
   },
   // MARK: String
   {
@@ -37,7 +37,8 @@ const SNIPPETS: SnippetDef[] = [
     description: "Insert a string property",
     body: `"\${1:str}": {
   "type": "string",
-  "description": "\${2:A string property}" },`,
+  "description": "\${2:A string property}"
+}`,
   },
   // MARK: Number
   {
@@ -45,7 +46,8 @@ const SNIPPETS: SnippetDef[] = [
     description: "Insert a number property",
     body: `"\${1:num}": {
   "type": "number",
-  "description": "\${2:A numeric property}" },`,
+  "description": "\${2:A numeric property}"
+}`,
   },
   // MARK: Boolean
   {
@@ -54,7 +56,7 @@ const SNIPPETS: SnippetDef[] = [
     body: `"\${1:bool}": {
   "type": "boolean",
   "description": "\${2:A boolean property}"
-},`,
+}`,
   },
   // MARK: Integer
   {
@@ -63,7 +65,7 @@ const SNIPPETS: SnippetDef[] = [
     body: `"\${1:int}": {
   "type": "integer",
   "description": "\${2:An integer property}"
-},`,
+}`,
   },
   // MARK: Null
   {
@@ -72,7 +74,7 @@ const SNIPPETS: SnippetDef[] = [
     body: `"\${1:nullProp}": {
   "type": "null",
   "description": "\${2:A null property}"
-},`,
+}`,
   },
   // MARK: Pattern
   {
@@ -82,7 +84,7 @@ const SNIPPETS: SnippetDef[] = [
   "type": "string",
   "pattern": "\${2:^[a-zA-Z]+$}",
   "description": "\${3:A string property with pattern}"
-},`,
+}`,
   },
 ];
 

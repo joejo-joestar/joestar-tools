@@ -15,7 +15,15 @@ interface SplitViewProps {
   schemaTitle?: string;
   onSchemaTitleChange?: (value: string) => void;
   generatedSchema: object;
-  onImportSchema?: (schemaObj: object) => void;
+  onImportSchema?: (
+    schemaObj: object,
+    markers?: {
+      message: string;
+      severity: number;
+      startLineNumber: number;
+      startColumn: number;
+    }[]
+  ) => void;
 }
 
 const SplitView: React.FC<SplitViewProps> = ({
