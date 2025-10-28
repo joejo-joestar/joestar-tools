@@ -41,14 +41,14 @@ const SchemaMaker: React.FC = () => {
   const [fields, setFields] = useState<SchemaField[]>([
     {
       id: crypto.randomUUID(),
-      key: "",
+      key: "obj",
       type: SchemaType.OBJECT,
       description: "",
       required: true,
       properties: [
         {
           id: crypto.randomUUID(),
-          key: "",
+          key: "str",
           type: SchemaType.STRING,
           description: "",
           required: true,
