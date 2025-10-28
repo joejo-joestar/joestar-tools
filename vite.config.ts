@@ -18,7 +18,12 @@ export default defineConfig({
       "@shared": path.resolve(__dirname, "./src/shared"),
     },
   },
-  plugins: [react(), tailwindcss(), monacoEditorPlugin({})],
+  plugins: [
+    react(),
+    tailwindcss(),
+    // https://github.com/tanghaojie/vite-plugin-monaco-editor-esm
+    monacoEditorPlugin({}),
+  ],
   server: {
     host: "0.0.0.0", // bind to all interfaces (IPv4 & IPv6)
     port: 5173,
