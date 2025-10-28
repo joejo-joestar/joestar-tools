@@ -15,6 +15,7 @@ interface SplitViewProps {
   schemaTitle?: string;
   onSchemaTitleChange?: (value: string) => void;
   generatedSchema: object;
+  onImportSchema?: (schemaObj: object) => void;
 }
 
 const SplitView: React.FC<SplitViewProps> = ({
@@ -25,6 +26,7 @@ const SplitView: React.FC<SplitViewProps> = ({
   schemaTitle,
   onSchemaTitleChange,
   generatedSchema,
+  onImportSchema,
 }) => {
   return (
     <div className="flex flex-row md:flex-row w-full min-h-screen gap-2 mb-10">
@@ -39,7 +41,7 @@ const SplitView: React.FC<SplitViewProps> = ({
         />
       </div>
       <div className="w-full bg-ctp-green-900/20 border border-ctp-green/50 flex flex-col">
-        <CodeViewer schema={generatedSchema} />
+        <CodeViewer schema={generatedSchema} onImportSchema={onImportSchema} />
       </div>
     </div>
   );

@@ -36,6 +36,7 @@ function convertProperty(
     type,
     description: def.description || "",
     required: !!(requiredKeys && requiredKeys.includes(key)),
+    pattern: def.pattern,
   } as SchemaField;
 
   if (type === SchemaType.OBJECT) {

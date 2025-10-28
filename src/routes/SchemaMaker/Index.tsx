@@ -2,6 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { type SchemaField, SchemaType } from "@shared/types";
 import SplitView from "@components/SchemaMakerComps/SplitView";
+import { schemaToFields } from "@utils/schemaConverter";
 import useMediaQuery from "@hooks/useMediaQuery";
 import SchemaBuilder from "@components/SchemaMakerComps/SchemaBuilder";
 import CodeViewer from "@components/SchemaMakerComps/CodeViewer";
@@ -203,6 +204,11 @@ const SchemaMaker: React.FC = () => {
           description: field.description || undefined,
         };
 
+        // Include pattern for string types when provided
+        if (field.type === SchemaType.STRING && field.pattern) {
+          definition.pattern = field.pattern;
+        }
+
         if (field.type === SchemaType.OBJECT) {
           const nested = buildProperties(field.properties || []);
           definition.properties = nested.properties;
@@ -237,6 +243,18 @@ const SchemaMaker: React.FC = () => {
       required: root.required.length > 0 ? root.required : undefined,
     };
   }, [fields, schemaTitle]);
+
+  // Import handler: replace left-side fields from a JSON Schema object
+  const handleImportSchema = (schemaObj: object) => {
+    try {
+      const converted = schemaToFields(schemaObj);
+      if (converted && converted.length > 0) {
+        setFields(converted as SchemaField[]);
+      }
+    } catch (_err) {
+      // ignore invalid schema
+    }
+  };
 
   return (
     <section className="flex flex-col w-10/12 min-h-screen bg-ctp-base text-ctp-rosewater my-64">
@@ -275,6 +293,7 @@ const SchemaMaker: React.FC = () => {
           schemaTitle={schemaTitle}
           onSchemaTitleChange={setSchemaTitle}
           generatedSchema={generatedSchema}
+          onImportSchema={handleImportSchema}
         />
       ) : (
         <div className="w-full flex flex-col gap-4">

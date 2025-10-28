@@ -124,6 +124,27 @@ const SchemaFieldEditor: React.FC<SchemaFieldEditorProps> = ({
             className="w-full bg-ctp-sapphire-800/20 border border-ctp-sapphire-700/50 px-3 py-2 text-ctp-rosewater placeholder-ctp-sapphire-500/25 focus:ring-1 focus:ring-ctp-blue-400 focus:outline-none transition duration-200"
           />
         </div>
+        {/* Pattern Input (only for string type) */}
+        {field.type === SchemaType.STRING && (
+          <div className="md:col-span-2">
+            <label
+              htmlFor={`pattern-${field.id}`}
+              className="block text-sm font-medium mb-1"
+            >
+              Pattern (regex)
+            </label>
+            <input
+              type="text"
+              id={`pattern-${field.id}`}
+              value={field.pattern ?? ""}
+              onChange={(e) =>
+                onFieldUpdate(field.id, "pattern", e.target.value)
+              }
+              placeholder="e.g. ^[A-Za-z0-9_-]+$"
+              className="w-full bg-ctp-sapphire-800/20 border border-ctp-sapphire-700/50 px-3 py-2 text-ctp-rosewater placeholder-ctp-sapphire-500/25 focus:ring-1 focus:ring-ctp-blue-400 focus:outline-none transition duration-200"
+            />
+          </div>
+        )}
       </div>
 
       <div className="mt-4 flex items-center justify-between">
