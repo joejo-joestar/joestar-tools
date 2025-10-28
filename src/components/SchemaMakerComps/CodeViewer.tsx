@@ -210,24 +210,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
               </>
             )}
           </button>
-          {/** Import button — reads editor contents, parses JSON, and sends to parent */}
-          <button
-            onClick={() => {
-              try {
-                const text = modelRef.current?.getValue() ?? "";
-                const parsed = JSON.parse(text);
-                if (parsed && typeof parsed === "object") {
-                  // call prop if provided
-                  if (onImportSchema) onImportSchema(parsed);
-                }
-              } catch {
-                // ignore parse errors
-              }
-            }}
-            className="bg-ctp-blue-700 hover:bg-ctp-blue-600 text-ctp-blue-50 font-medium py-2 px-3 rounded"
-          >
-            Import
-          </button>
+          {/* Import button removed — Ctrl/Cmd+S now triggers import when editor content is dirty */}
         </div>
       </div>
 
