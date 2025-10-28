@@ -359,7 +359,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
 
       <div className="h-[2px] bg-ctp-green/50 my-2" />
 
-      <div className="p-4 overflow-auto border-ctp-base bg-ctp-base h-full">
+      <div className="p-4 border-ctp-base bg-ctp-base h-full">
         {isMobile ? (
           <div className="w-full">
             <pre className="text-sm whitespace-pre-wrap">
@@ -370,7 +370,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
             </pre>
           </div>
         ) : (
-          <div ref={containerRef} className="w-full h-full overflow-hidden" />
+          <div ref={containerRef} className="w-full h-full" />
         )}
       </div>
 
