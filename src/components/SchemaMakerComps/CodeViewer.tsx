@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import useMediaQuery from "@hooks/useMediaQuery";
 import { ClipboardIcon, CheckIcon } from "@/assets/Icons";
 import * as monaco from "monaco-editor";
 // Import Monaco web workers using Vite's `?worker` import so the bundler
@@ -10,6 +11,15 @@ import JsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import { createHighlighter } from "shiki";
 import { shikiToMonaco } from "@shikijs/monaco";
 import "@catppuccin/highlightjs/css/catppuccin-mocha.css";
+import hljs from "highlight.js/lib/core";
+import jsonLang from "highlight.js/lib/languages/json";
+
+// Register JSON language for highlight.js (idempotent)
+try {
+  hljs.registerLanguage("json", jsonLang);
+} catch {
+  /* ignore if already registered */
+}
 import SNIPPETS from "../../utils/snippets";
 import Toast from "../Toast";
 import type { ToastVariant } from "../Toast";
@@ -41,6 +51,8 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const modelRef = useRef<monaco.editor.ITextModel | null>(null);
+  // mobile: screens smaller than `lg` (max-width: 1023px)
+  const isMobile = useMediaQuery("(max-width: 1023px)");
   const [copied, setCopied] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
@@ -56,8 +68,9 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
   const completionProviderRef = useRef<monaco.IDisposable | null>(null);
   const keydownListenerRef = useRef<monaco.IDisposable | null>(null);
 
-  // Initialize the editor once
+  // Initialize the editor once (skip on mobile to keep bundle small)
   useEffect(() => {
+    if (isMobile) return;
     if (!containerRef.current) return;
 
     const initial = JSON.stringify(schema ?? {}, null, 2);
@@ -200,11 +213,30 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
         // release suppression on next tick
         window.setTimeout(() => (suppressChangeRef.current = false), 0);
       }
-    } else if (editorRef.current && containerRef.current) {
+    } else if (!isMobile && editorRef.current && containerRef.current) {
       modelRef.current = monaco.editor.createModel(txt, "json");
       editorRef.current.setModel(modelRef.current);
     }
   }, [schema]);
+
+  // Precompute the schema string and highlighted HTML for mobile view
+  const schemaString = React.useMemo(
+    () => JSON.stringify(schema ?? {}, null, 2),
+    [schema]
+  );
+  const highlightedHtml = React.useMemo(() => {
+    try {
+      return hljs.highlight(schemaString, {
+        language: "json",
+        ignoreIllegals: true,
+      }).value;
+    } catch (_err) {
+      return schemaString
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+  }, [schemaString]);
 
   // Helper: collect markers (errors/warnings) for the current model and
   // return a short human-readable summary suitable for a toast message.
@@ -242,8 +274,10 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
 
   const handleCopy = async () => {
     try {
-      const text =
-        modelRef.current?.getValue() ?? JSON.stringify(schema ?? {}, null, 2);
+      const text = isMobile
+        ? schemaString
+        : (modelRef.current?.getValue() ??
+          JSON.stringify(schema ?? {}, null, 2));
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setToast({ message: "Copied to clipboard", variant: "success" });
@@ -308,24 +342,38 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
               </>
             )}
           </button>
-          <button
-            onClick={handleImport}
-            className="bg-ctp-blue-700 hover:bg-ctp-blue-600 text-ctp-blue-50 flex-shrink-0 cursor-pointer w-full sm:w-auto font-medium py-2 px-4 transition duration-200 flex items-center justify-center gap-2"
-          >
-            {onImportSchema && (
-              <>
-                <span>Import Schema</span>
-              </>
-            )}
-          </button>
+          {!isMobile && (
+            <button
+              onClick={handleImport}
+              className="bg-ctp-blue-700 hover:bg-ctp-blue-600 text-ctp-blue-50 flex-shrink-0 cursor-pointer w-full sm:w-auto font-medium py-2 px-4 transition duration-200 flex items-center justify-center gap-2"
+            >
+              {onImportSchema && (
+                <>
+                  <span>Import Schema</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
 
       <div className="h-[2px] bg-ctp-green/50 my-2" />
 
       <div className="p-4 overflow-auto border-ctp-base bg-ctp-base h-full">
-        <div ref={containerRef} className="w-full h-full overflow-hidden" />
+        {isMobile ? (
+          <div className="w-full">
+            <pre className="text-sm whitespace-pre-wrap">
+              <code
+                className="language-json text-sm whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+              />
+            </pre>
+          </div>
+        ) : (
+          <div ref={containerRef} className="w-full h-full overflow-hidden" />
+        )}
       </div>
+
       {toast && (
         <Toast
           message={toast.message}
