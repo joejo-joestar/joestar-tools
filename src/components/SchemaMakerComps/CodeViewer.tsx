@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ClipboardIcon, CheckIcon } from "@/assets/Icons";
 import * as monaco from "monaco-editor";
+// Import Monaco web workers using Vite's `?worker` import so the bundler
+// produces separate worker bundles and resolves their paths correctly.
+// These imports produce worker constructors that can be instantiated with
+// `new EditorWorker()` / `new JsonWorker()`.
+import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+import JsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import { createHighlighter } from "shiki";
 import { shikiToMonaco } from "@shikijs/monaco";
 import "@catppuccin/highlightjs/css/catppuccin-mocha.css";
@@ -13,18 +19,9 @@ interface CodeViewerProps {
 (self as unknown as { MonacoEnvironment?: unknown }).MonacoEnvironment = {
   getWorker(_: unknown, label: string) {
     if (label === "json") {
-      return new Worker(
-        new URL(
-          "monaco-editor/esm/vs/language/json/json.worker",
-          import.meta.url
-        ),
-        { type: "module" }
-      );
+      return new JsonWorker();
     }
-    return new Worker(
-      new URL("monaco-editor/esm/vs/editor/editor.worker", import.meta.url),
-      { type: "module" }
-    );
+    return new EditorWorker();
   },
 };
 

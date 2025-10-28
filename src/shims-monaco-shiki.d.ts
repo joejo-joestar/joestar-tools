@@ -10,3 +10,18 @@ declare module "shiki" {
 declare module "@shikijs/monaco" {
   export function shikiToMonaco(highlighter: any, monaco: any): void;
 }
+
+// Allow importing worker scripts with the `?worker` suffix in Vite.
+declare module "monaco-editor/esm/vs/editor/editor.worker?worker" {
+  const workerCtor: {
+    new (): Worker;
+  };
+  export default workerCtor;
+}
+
+declare module "monaco-editor/esm/vs/language/json/json.worker?worker" {
+  const workerCtor: {
+    new (): Worker;
+  };
+  export default workerCtor;
+}
