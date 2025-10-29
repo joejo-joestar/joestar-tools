@@ -29,6 +29,8 @@ a list of available tools
 
 a simple clientside rss / atom news feed detector
 
+read more about this tool in the [readme here](./docs/FeedFinder.readme.md)
+
 <details>
     <summary>Preview</summary>
     <p align="center">
@@ -39,6 +41,8 @@ a simple clientside rss / atom news feed detector
 ### Schema Maker
 
 a clientside visual [json schema](https://json-schema.org/understanding-json-schema/about) generator
+
+read more about this tool in the [readme here](./docs/SchemaMaker.readme.md)
 
 <details>
     <summary>Preview</summary>
