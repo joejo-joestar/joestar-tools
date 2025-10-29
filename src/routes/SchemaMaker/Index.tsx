@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useMemo } from "react";
 import * as monaco from "monaco-editor";
 import { type SchemaField, SchemaType } from "@shared/types";
