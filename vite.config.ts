@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
+import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,9 +16,15 @@ export default defineConfig({
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@routes": path.resolve(__dirname, "./src/routes"),
       "@shared": path.resolve(__dirname, "./src/shared"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
     },
   },
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    // https://github.com/tanghaojie/vite-plugin-monaco-editor-esm
+    monacoEditorPlugin({}),
+  ],
   server: {
     host: "0.0.0.0", // bind to all interfaces (IPv4 & IPv6)
     port: 5173,

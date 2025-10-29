@@ -14,7 +14,7 @@ function Home() {
           />
           <span>
             some tools by{" "}
-            <a href="https://joestar.vercel.app" target="_blank">
+            <a href="https://joestar.is-a.dev" target="_blank">
               joestar
             </a>
             .

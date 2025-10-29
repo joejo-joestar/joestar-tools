@@ -17,6 +17,7 @@ export interface SchemaField {
   required: boolean;
   properties?: SchemaField[];
   items?: SchemaField;
+  pattern?: string;
 }
 
 export interface FeedFinderResponse {

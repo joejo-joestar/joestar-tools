@@ -7,31 +7,5 @@
     {
       "path": "./tsconfig.node.json"
     }
-  ],
-  // https://stackoverflow.com/a/77249075
-  "compilerOptions": {
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@assets/*": [
-        "./src/assets/*"
-      ],
-      "@api/*": [
-        "./src/api/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@routes/*": [
-        "./src/routes/*"
-      ],
-      "@shared/*": [
-        "./src/shared/*"
-      ],
-    }
-  }
+  ]
 }
