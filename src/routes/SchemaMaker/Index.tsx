@@ -366,6 +366,26 @@ const SchemaMaker: React.FC = () => {
           />
           schema maker.
         </h1>
+        <p className="text-ctp-rosewater-950 text-lg">
+          find the source code over at{" "}
+          <a
+            href="https://github.com/joejo-joestar/joestar-tools/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            joejo-joestar/joestar-tools
+          </a>{" "}
+          or read the{" "}
+          <a
+            href="https://github.com/joejo-joestar/joestar-tools/blob/main/docs/SchemaMaker.readme.md"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            documentation
+          </a>
+          .
+        </p>
+        <br />
         <p className="text-ctp-blue-950 text-lg">
           start creating a{" "}
           <a
@@ -375,8 +395,8 @@ const SchemaMaker: React.FC = () => {
             rel="noopener noreferrer"
           >
             json schema
-          </a>
-          .
+          </a>{" "}
+          below!
         </p>
       </header>
 
