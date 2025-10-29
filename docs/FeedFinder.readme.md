@@ -1,5 +1,7 @@
-# Feed Finder
-
+<h1 align="center">
+    <img src="../src/assets/pixnewscar.png" alt="news car" title="news car" width="32" />
+feed finder.
+</h1>
 a simple clientside rss / atom news feed detector
 
 <p align="center">

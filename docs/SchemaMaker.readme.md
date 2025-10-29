@@ -1,4 +1,7 @@
-# Schema Maker
+<h1 align="center">
+    <img src="../src/assets/pixcodingcar.png" alt="coding car" title="coding car" width="32" />
+schema maker.
+</h1>
 
 a clientside visual [json schema](https://json-schema.org/understanding-json-schema/about) generator
 
