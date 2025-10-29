@@ -2,10 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import useMediaQuery from "@hooks/useMediaQuery";
 import { ClipboardIcon, CheckIcon } from "@/assets/Icons";
 import * as monaco from "monaco-editor";
-// Import Monaco web workers using Vite's `?worker` import so the bundler
-// produces separate worker bundles and resolves their paths correctly.
-// These imports produce worker constructors that can be instantiated with
-// `new EditorWorker()` / `new JsonWorker()`.
 import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 import JsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import { createHighlighter } from "shiki";
@@ -20,9 +16,10 @@ try {
 } catch {
   /* ignore if already registered */
 }
-import SNIPPETS from "../../utils/snippets";
-import Toast from "../Toast";
-import type { ToastVariant } from "../Toast";
+
+import Snippets from "@utils/snippets";
+import Toast from "@components/Toast";
+import type { ToastVariant } from "@components/Toast";
 
 interface CodeViewerProps {
   schema: object;
@@ -51,19 +48,14 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const modelRef = useRef<monaco.editor.ITextModel | null>(null);
-  // mobile: screens smaller than `lg` (max-width: 1023px)
-  const isMobile = useMediaQuery("(max-width: 1023px)");
+  const isMobile = useMediaQuery("(max-width: 1220px)");
   const [copied, setCopied] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
     variant?: ToastVariant;
   } | null>(null);
-  // Suppress change events that originate from programmatic model updates
   const suppressChangeRef = useRef(false);
-  // Debounce timer for parsing editor content
-  // Track whether the editor content has unsaved changes
   const contentDirtyRef = useRef(false);
-  // Store disposable for content change listener so we can dispose on cleanup
   const contentListenerRef = useRef<monaco.IDisposable | null>(null);
   const completionProviderRef = useRef<monaco.IDisposable | null>(null);
   const keydownListenerRef = useRef<monaco.IDisposable | null>(null);
@@ -125,7 +117,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
               position.lineNumber,
               word.endColumn
             );
-            const suggestions: monaco.languages.CompletionItem[] = SNIPPETS.map(
+            const suggestions: monaco.languages.CompletionItem[] = Snippets.map(
               (s) => ({
                 label: s.label,
                 kind: monaco.languages.CompletionItemKind.Snippet,
@@ -238,6 +230,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
     }
   }, [schemaString]);
 
+  // MARK: Helpers
   // Helper: collect markers (errors/warnings) for the current model and
   // return a short human-readable summary suitable for a toast message.
   const getMarkerSummary = (): string | null => {
@@ -272,6 +265,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
     }
   }, [copied]);
 
+  // MARK: Handlers
   const handleCopy = async () => {
     try {
       const text = isMobile
@@ -321,6 +315,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ schema, onImportSchema }) => {
       }
     }
   };
+
   return (
     <div className="h-full flex flex-col relative p-6">
       <div className="flex justify-between items-center flex-col sm:flex-row">

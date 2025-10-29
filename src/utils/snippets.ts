@@ -4,7 +4,7 @@ export interface SnippetDef {
   body: string;
 }
 
-const SNIPPETS: SnippetDef[] = [
+const Snippets: SnippetDef[] = [
   // MARK: Object
   {
     label: "object",
@@ -88,4 +88,4 @@ const SNIPPETS: SnippetDef[] = [
   },
 ];
 
-export default SNIPPETS;
+export default Snippets;
