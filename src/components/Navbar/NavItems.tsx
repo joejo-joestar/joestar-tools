@@ -1,7 +1,7 @@
 export const NavItems = {
-  projects: { to: "https://joestar.vercel.app/projects", label: "projects." },
+  projects: { to: "https://joestar.is-a.dev/projects", label: "projects." },
   tools: { to: "/", label: "tools." },
-  photos: { to: "https://joestar.vercel.app/pics", label: "photos." },
-  now: { to: "https://joestar.vercel.app/nownownow", label: "now." },
-  contact: { to: "https://joestar.vercel.app/contact", label: "contact." },
+  photos: { to: "https://joestar.is-a.dev/pics", label: "photos." },
+  now: { to: "https://joestar.is-a.dev/nownownow", label: "now." },
+  contact: { to: "https://joestar.is-a.dev/contact", label: "contact." },
 };

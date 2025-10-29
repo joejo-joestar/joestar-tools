@@ -23,7 +23,7 @@ const Navbar = () => {
         {!isMobile && (
           <>
             <div className="nav-home">
-              <NavLink to="https://joestar.vercel.app/" end>
+              <NavLink to="https://joestar.is-a.dev/" end>
                 <img
                   src="https://raw.githubusercontent.com/joejo-joestar/joestar/fc38de228fac77efad2318e634293e7f36ceebce/public/pixlogo.png"
                   alt="Joe :3"

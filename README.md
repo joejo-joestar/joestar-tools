@@ -5,7 +5,7 @@
 </p>
 
 some client-side tools, by me :3
-(an extension of my [portfolio website](https://joestar.vercel.app/) ([repo](https://github.com/joejo-joestar/joestar)))
+(an extension of my [portfolio website](https://joestar.is-a.dev/) ([repo](https://github.com/joejo-joestar/joestar)))
 
 to run this project locally, you need to have [Node.js](https://nodejs.org/) installed. And then run the following commands:
 
@@ -38,7 +38,7 @@ a simple clientside rss / atom news feed detector
 
 ### Schema Maker
 
-a simple clientside visual [json schema](https://json-schema.org/understanding-json-schema/about) generator
+a clientside visual [json schema](https://json-schema.org/understanding-json-schema/about) generator
 
 <details>
     <summary>Preview</summary>
@@ -90,10 +90,13 @@ joestar-tools
     │   ├── Home/         # Home page
     │   ├── Missingno/    # 404 page
     │   └── SchemaMaker/  # Schema Maker App
-    └── shared/             # Shared utilities / data
-        ├── constants.ts    # Constants used by the tools
-        ├── socialsList.ts  # Social links used across the site
-        └── types.ts        # Custom types
+    ├── shared/             # Shared utilities / data
+    │   ├── constants.ts    # Constants used by the tools
+    │   ├── socialsList.ts  # Social links used across the site
+    │   └── types.ts        # Custom types
+    └── utils/                  # utilities
+        ├── schemaConverter.ts  # Utitlty to convert schema to UI blocks
+        └── snippets.ts         # Custom Snippets for the schema editor
 ```
 
 ---
