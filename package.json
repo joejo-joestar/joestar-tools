@@ -18,7 +18,7 @@
     "@shikijs/monaco": "^3.14.0",
     "@tailwindcss/vite": "^4.1.13",
     "@vercel/analytics": "^1.5.0",
-    "autoprefixer": "^10.4.21",
+    "autoprefixer": "^10.4.22",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-react": "^7.37.5",
