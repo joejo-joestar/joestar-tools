@@ -5,7 +5,7 @@
 </p>
 
 some client-side tools, by me :3
-(an extension of my [portfolio website](https://joestar.is-a.dev/) ([repo](https://github.com/joejo-joestar/joestar)))
+(an extension of my [portfolio website](https://joejojoestar.com/) ([repo](https://github.com/joejo-joestar/joestar)))
 
 to run this project locally, you need to have [Node.js](https://nodejs.org/) installed. And then run the following commands:
 
